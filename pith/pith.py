@@ -25,7 +25,7 @@ class Pith(object):
             return module + '.' + name
 
 
-    def __show(self, obj, attributes):
+    def __show(self, obj, attributes=None):
         if hasattr(obj, '__dict__'):
             if attributes is None:
                 keys = obj.__dict__.iterkeys()
@@ -53,7 +53,7 @@ class Pith(object):
 
 
     def show(self, obj, attributes=None):
-        return self.sep.join(self.__show(obj, attributes))
+        return self.sep.join(self.__show(obj, attributes=None))
 
 
     def read(self, string):
