@@ -1,5 +1,5 @@
-import pith.classes as classes
-import pith.handler as handler
+import classes
+import handler
 
 
 class Pith(object):
@@ -25,7 +25,7 @@ class Pith(object):
             return module + '.' + name
 
 
-    def __show(obj, attributes):
+    def __show(self, obj, attributes):
         if hasattr(obj, '__dict__'):
             if attributes is None:
                 keys = obj.__dict__.iterkeys()
@@ -52,25 +52,31 @@ class Pith(object):
             yield self.sigils['NEW']
 
 
-    def show(obj, attributes=None):
+    def show(self, obj, attributes=None):
         return self.sep.join(self.__show(obj, attributes))
 
 
-    def read(string):
+    def read(self, string):
         stack = list()
         for term in string.split(self.sep):
-            if self.debug:
-                print 'PITH: ', stack
-
             t = term.strip()
+
+            if self.debug:
+                print 'PITH\tTERM: %s\n\tSTACK: %s' % (t, stack)
+
             try:
                 h = self.words.lookup_handler(t)
-                stack = h.handle(self.words, self.types, t)
-            except UnknownSigil, e:
-                print e
-                raise classes.ParseFailure, string
+
+                if self.debug:
+                    print '\tHANDLER:', h
+
+                stack = h.handle(self.words, self.types, stack)
+            except classes.UnknownSigil, e:
+                stack.append(t)
 
         if len(stack) == 1:
             return stack.pop()
         else:
-            raise classes.ParseFailure, string, stack
+            msg = '\tstring: %s\n\tstack: %s' % (string, stack)
+            # print msg
+            raise classes.ParseFailure, msg

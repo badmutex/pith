@@ -2,8 +2,10 @@ from distutils.core import setup
 
 setup(name='pith',
       version='0.1',
-      py_modules= ['pith.classes',
+      py_modules= ['pith.pith',
                    'pith.handler',
-                   'pith.pith'
+                   'pith.classes'
                    ]
       )
+
+

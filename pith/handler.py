@@ -1,6 +1,4 @@
-import pith.classes as classes
-
-
+import classes
 
 
 
@@ -12,7 +10,7 @@ class Handler(object):
 
     def lookup_handler(self, sigil):
         try:
-            return self.handlers[word]
+            return self.handlers[sigil]
         except KeyError:
             raise self.unknown_exception, sigil
 
@@ -25,7 +23,7 @@ class Type(object):
     def handle(cls, words, types, stack):
         t  = stack.pop()
         ty = types.lookup_handler(t)
-        stack.append(t)
+        stack.append(ty)
         return stack
 
 
@@ -44,8 +42,9 @@ class Field(object):
     def handle(cls, words, types, stack):
         name  = stack.pop()
         value = stack.pop()
-        f     = Field(name, value)
+        f     = classes.Field(name, value)
         stack.append(f)
+        return stack
 
 class Object(object):
     @classmethod
@@ -73,7 +72,9 @@ class SomeType(object):
 # The values of __sigils__ should positionally correspond to the values of __word_handlers__:
 # they are zipped together for the DefaultWordHandler down below
 
-__sigils__ = dict([ (s,s) for s in ['TYPE', 'NEW', 'FIELD', 'OBJECT', 'SOMETYPE'] ])
+__sigils__ = ['TYPE', 'NEW', 'FIELD', 'OBJECT', 'SOMETYPE']
+
+__sigils_pairs__ = dict([ (s,s) for s in __sigils__ ])
 
 __word_handlers__ = [Type, New, Field, Object, SomeType]
 
@@ -83,7 +84,7 @@ __type_handlers__ = {'int' : int,
                      }
 
 
-DefaultSigils      = __sigils__
+DefaultSigils      = __sigils_pairs__
 DefaultWordHandler = Handler( 'word',
                               dict(zip(__sigils__, __word_handlers__)),
                               classes.UnknownWord)
