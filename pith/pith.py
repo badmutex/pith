@@ -34,7 +34,7 @@ class Pith(object):
 
             for nkeys, a in enumerate(keys):
                 for s in self.__show(getattr(obj, a)):
-                    yield a
+                    yield s
 
                 yield a
                 yield self.sigils['FIELD']
@@ -53,7 +53,7 @@ class Pith(object):
 
 
     def show(self, obj, attributes=None):
-        return self.sep.join(self.__show(obj, attributes=None))
+        return self.sep.join(self.__show(obj, attributes=attributes))
 
 
     def read(self, string):
