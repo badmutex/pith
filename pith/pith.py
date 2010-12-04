@@ -32,8 +32,10 @@ class Pith(object):
             else:
                 keys = iter(attributes)
 
+            skipped = 0
             for nkeys, a in enumerate(keys):
                 if a in ignore_attributes:
+                    skipped += 1
                     continue
 
                 for s in self.__show(getattr(obj, a)):
@@ -44,7 +46,7 @@ class Pith(object):
 
             yield self.get_module_and_type(obj)
             yield self.sigils['SOMETYPE']
-            yield str(nkeys + 1)
+            yield str(nkeys + 1 - skipped)
             yield self.sigils['OBJECT']
 
         else:
