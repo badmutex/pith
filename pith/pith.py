@@ -25,7 +25,7 @@ class Pith(object):
             return module + '.' + name
 
 
-    def __show(self, obj, attributes=None):
+    def __show(self, obj, attributes=None, ignore_attributes=set()):
         if hasattr(obj, '__dict__'):
             if attributes is None:
                 keys = obj.__dict__.iterkeys()
@@ -33,6 +33,9 @@ class Pith(object):
                 keys = iter(attributes)
 
             for nkeys, a in enumerate(keys):
+                if a in ignore_attributes:
+                    continue
+
                 for s in self.__show(getattr(obj, a)):
                     yield s
 
@@ -52,8 +55,8 @@ class Pith(object):
             yield self.sigils['NEW']
 
 
-    def show(self, obj, attributes=None):
-        return self.sep.join(self.__show(obj, attributes=attributes))
+    def show(self, obj, attributes=None, ignore_attributes=set()):
+        return self.sep.join(self.__show(obj, attributes=attributes, ignore_attributes=ignore_attributes))
 
 
     def read(self, string):
