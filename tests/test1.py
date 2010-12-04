@@ -9,3 +9,6 @@ obj = p.read(l)
 print obj
 for k,v in obj.__dict__.iteritems():
     print '\t', k,'=', v
+
+
+print p.show(obj)
