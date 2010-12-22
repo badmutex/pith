@@ -24,7 +24,24 @@ class SomeType(object):
     Wrap the fields of the reconstructed object.
     """
 
-    pass
+    def construct_original(self):
+        """
+        Construct an object of the original type and set it's attributes to mine from self.__dict__
+        """
+
+        srcs = self._pith_source_type.split('.')
+        module = '.'.join(srcs[:-1])
+        typ = srcs[-1]
+
+        cmd = 'from %(module)s import %(name)s' % {'module' : module, 'name' : typ}
+        exec cmd
+        Type = eval(typ)
+        obj = Type()
+
+        for attr, val in self.__dict__.iteritems():
+            setattr(obj, attr, val)
+
+        return obj
 
 
 class Field:
