@@ -1,11 +1,11 @@
 
 
 
-class WordException(BaseException):
+class WordException(Exception):
     pass
 
 
-class UnknownSigil(BaseException):
+class UnknownSigil(Exception):
     pass
 
 class UnknownWord(UnknownSigil):
@@ -15,7 +15,7 @@ class UnknownType(UnknownSigil):
     pass
 
 
-class ParseFailure(BaseException):
+class ParseFailure(Exception):
     pass
 
 
@@ -25,7 +25,6 @@ class SomeType(object):
     """
 
     pass
-
 
 
 class Field:
