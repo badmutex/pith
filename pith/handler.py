@@ -1,5 +1,6 @@
 import classes
 
+import functools
 
 
 class Handler(object):
@@ -68,6 +69,9 @@ class SomeType(object):
 
 
 
+def mkseq(typ, *args, **kws):
+    composed = kws.get('composed', lambda a:a)
+    return composed(typ(args))
 
 # The values of __sigils__ should positionally correspond to the values of __word_handlers__:
 # they are zipped together for the DefaultWordHandler down below
@@ -78,9 +82,12 @@ __sigils_pairs__ = dict([ (s,s) for s in __sigils__ ])
 
 __word_handlers__ = [Type, New, Field, Object, SomeType]
 
-__type_handlers__ = {'int' : int,
+__type_handlers__ = {'int'   : int,
                      'float' : float,
-                     'str' : str
+                     'str'   : str,
+                     'tuple' : functools.partial(mkseq, tuple),
+                     'list'  : functools.partial(mkseq, list),
+                     'dict'  : functools.partial(mkseq, list, composed=dict),
                      }
 
 
