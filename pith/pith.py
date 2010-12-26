@@ -1,8 +1,13 @@
 import classes
 import handler
 
+from valid_containers import valid_pith_containers
+
 
 class Pith(object):
+
+    VALID_CONTAINERS = valid_pith_containers
+
     def __init__(self,
                  sep    = ' :&: ',
                  sigils = handler.DefaultSigils,
@@ -65,7 +70,14 @@ class Pith(object):
             num_params = 1
 
             def check_type(typ): return isinstance(obj, typ)
-            if any(map(check_type, [list,tuple,dict])):
+
+            to_check = Pith.VALID_CONTAINERS
+            check_result = map(check_type, to_check)
+
+            if self.debug:
+                print 'PITH\t  Typecheck:', any(check_result), zip(to_check, check_result)
+
+            if any(check_result):
 
                 num_params = len(obj)
                 if isinstance(obj, list) or isinstance(obj, tuple):
@@ -74,7 +86,7 @@ class Pith(object):
 
                 elif isinstance(obj, dict):
                     for k,v in obj.iteritems():
-                        for s in self.__show((k,v)):yield s
+                        for s in self.__show((k,v)): yield s
 
                 else:
                     raise classes.UnknownType, 'Cannot pith-ify instance of %s' % type(obj)
@@ -110,6 +122,9 @@ class Pith(object):
                 stack = h.handle(self.words, self.types, stack)
             except classes.UnknownSigil, e:
                 stack.append(t)
+
+        if self.debug:
+            print 'PITH\tDONE Reading\n\tSTACK: %s' % stack
 
         if len(stack) == 1:
             return stack.pop()
