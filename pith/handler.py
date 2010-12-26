@@ -88,6 +88,7 @@ __type_handlers__ = {'int'   : int,
                      'tuple' : functools.partial(mkseq, tuple),
                      'list'  : functools.partial(mkseq, list),
                      'dict'  : functools.partial(mkseq, list, composed=dict),
+                     'bool'  : lambda s: True if s == 'True' else False
                      }
 
 
