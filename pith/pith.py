@@ -69,7 +69,7 @@ class Pith(object):
 
                 num_params = len(obj)
                 if isinstance(obj, list) or isinstance(obj, tuple):
-                    for a in obj:
+                    for a in reversed(obj):
                         for s in self.__show(a): yield s
 
                 elif isinstance(obj, dict):
