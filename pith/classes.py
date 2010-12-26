@@ -1,4 +1,4 @@
-
+from valid_containers import valid_pith_containers
 
 
 class WordException(Exception):
@@ -19,12 +19,21 @@ class ParseFailure(Exception):
     pass
 
 
+def sequence_items(seq):
+    for e in seq:
+        if isinstance(e, SomeType):
+            yield e.construct_original()
+
 class SomeType(object):
     """
     Wrap the fields of the reconstructed object.
     """
 
-    def construct_original(self):
+    def __init__(self, **kws):
+        for k,v in kws.iteritems():
+            setattr(self, k, v)
+
+    def construct_original(self, debug=False):
         """
         Construct an object of the original type and set it's attributes to mine from self.__dict__
         """
@@ -39,9 +48,31 @@ class SomeType(object):
         obj = Type()
 
         for attr, val in self.__dict__.iteritems():
+            if attr == '_pith_source_type': continue
+
+            if debug:
+                print 'PITH\tCONSTRUCT: SomeType\n\t%s = %s' % (attr, val)
+
+
+            if isinstance(val, SomeType):
+                val = val.construct_original()
+
+            if type(obj) in valid_pith_containers:
+                val = type(val)(sequence_items(val))
+
+            if debug:
+                print '\tCONSTRUCT: ORIGINAL\n\t%s = %s' % (attr, val)
+
             setattr(obj, attr, val)
 
         return obj
+
+    def __repr__(self):
+
+        def params():
+            for k,v in self.__dict__.iteritems():
+                yield str(k) + '=' + repr(v)
+        return 'SomeType(%s)' % ','.join(params())
 
 
 class Field:
