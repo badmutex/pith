@@ -26,7 +26,13 @@ class Pith(object):
 
 
     def __show(self, obj, attributes=None, ignore_attributes=set()):
+        if self.debug:
+            print 'PITH\tShowing', type(obj), obj
+
         if hasattr(obj, '__dict__'):
+            if self.debug:
+                print 'PITH\t  ',  '__dict__', obj
+
             if attributes is None:
                 keys = obj.__dict__.iterkeys()
             else:
@@ -34,6 +40,7 @@ class Pith(object):
 
             skipped = 0
             for nkeys, a in enumerate(keys):
+                nkeys += 1
                 if a in ignore_attributes:
                     skipped += 1
                     continue
@@ -44,9 +51,13 @@ class Pith(object):
                 yield a
                 yield self.sigils['FIELD']
 
+            try: nkeys
+            except NameError:
+                nkeys = 0
+
             yield self.get_module_and_type(obj)
             yield self.sigils['SOMETYPE']
-            yield str(nkeys + 1 - skipped)
+            yield str(nkeys - skipped)
             yield self.sigils['OBJECT']
 
         else:
