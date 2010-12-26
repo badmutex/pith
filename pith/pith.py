@@ -50,10 +50,31 @@ class Pith(object):
             yield self.sigils['OBJECT']
 
         else:
-            yield str(obj)
+
+            num_params = 1
+
+            def check_type(typ): return isinstance(obj, typ)
+            if any(map(check_type, [list,tuple,dict])):
+
+                num_params = len(obj)
+                if isinstance(obj, list) or isinstance(obj, tuple):
+                    for a in obj:
+                        for s in self.__show(a): yield s
+
+                elif isinstance(obj, dict):
+                    for k,v in obj.iteritems():
+                        for s in self.__show((k,v)):yield s
+
+                else:
+                    raise classes.UnknownType, 'Cannot pith-ify instance of %s' % type(obj)
+
+            else:
+                yield str(obj)
+
+
             yield type(obj).__name__
             yield self.sigils['TYPE']
-            yield '1'
+            yield str(num_params)
             yield self.sigils['NEW']
 
 
