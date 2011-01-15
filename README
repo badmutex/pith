@@ -1,0 +1,15 @@
+
+About
+=====
+
+Pith is a python library to serialize/deserialize data. It is intended
+to be used to communicate data between different processes
+or may not be running concurrently.
+
+
+Installation
+============
+
+python setup.py install --prefix=install/to/this/location
+
+
